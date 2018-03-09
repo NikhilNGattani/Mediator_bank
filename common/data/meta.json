@@ -1,0 +1,18 @@
+[
+	{
+		"model":"Carrier",
+		"filename" : "carrier.json"
+	},
+	{
+		"model":"Customer",
+		"filename" : "customer.json"
+	},
+	{
+		"model":"Load",
+		"filename" : "load.json"
+	},
+	{
+		"model":"Favouritelocation",
+		"filename" : "favouritelocation.json"
+	}
+]
