@@ -9,8 +9,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/google-map/google-map.html">
-<link rel="import" href="../bower_components/google-map/google-map-marker.html">
 <link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="shared-styles.html">
 
@@ -21,48 +19,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			height:80vh;
 		}
     </style>
-    <iron-ajax url='/api/Loads?filter={"where":{"Status":"open"}}'  last-response="{{loads}}" auto></iron-ajax>
-    <iron-ajax url='/api/Loads?filter={"where":{"Status":"transit"}}'  last-response="{{dispatches}}" auto></iron-ajax>
-    <iron-ajax url='/api/Carriers?filter={"where":{"Status":"wait"}}'  last-response="{{driversWaiting}}" auto></iron-ajax>
-    <div>
-      <!--<div class="circle">4</div>-->
-      <h1 class="background-color">XPO Tracking Dashboard</h1>
-      <google-map fit-to-marker latitude="{{latitude}}" longitude="{{longitude}}" class="map-height" api-key="AIzaSyD3E1D9b-Z7ekrT3tbhl_dy8DCXuIuDDRc">
-        <template is="dom-repeat" items="{{loads}}">
-          <google-map-marker icon="/android_asset/www/img/Container-icon.gif" latitude="{{item.CurrentLatitude}}" longitude="{{item.CurrentLongitude}}" draggable="false"></google-map-marker>
-        </template>
-        <template is="dom-repeat" items="{{dispatches}}">
-          <google-map-marker icon="/android_asset/www/img/xpo-truck.png" latitude="{{item.CurrentLatitude}}" longitude="{{item.CurrentLongitude}}" draggable="false"></google-map-marker>
-        </template>
-        <template is="dom-repeat" items="{{driversWaiting}}">
-          <google-map-marker icon="/android_asset/www/img/driver-icon.jpg" latitude="{{item.Latitude}}" longitude="{{item.Longitude}}" draggable="false"></google-map-marker>
-        </template>
-      </google-map>
-   </div>
-  </template>
 
-  <script>
+</template>
+
+<script>
     Polymer({
       is: 'my-view4',
-      attached: function(){
-        var self = this;
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(function(position){
-            self.latitude = position.coords.latitude;
-            self.longitude = position.coords.longitude;
-          },function(error){
-						console.log('code: '    + error.code    + '\n' +
-						'message: ' + error.message + '\n');
+      attached: function () {
 
-						self.latitude = 18.60;
-						self.longitude = 73.70;
-						}, { timeout: 3000, enableHighAccuracy: false });
-        } else { 
-          alert("Geolocation feature not supported");
-        }
-      },
-      showLoads: function(){
-        console.log("XXPPOO:",this.loads);
       }
     });
   </script>
