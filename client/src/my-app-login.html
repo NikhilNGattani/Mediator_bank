@@ -1,0 +1,101 @@
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="my-app-login">
+  <template>
+
+    <style ="">
+        paper-button {
+            /*Primary button class*/
+            margin-top:16px;
+            background-color: #212121;
+            --paper-button: {
+                color: #fff;
+                min-width: 140px;
+                height: 40px;
+                font-size: 15px;
+                letter-spacing: 0;
+                line-height: 30px;
+            }
+        }
+        .mainDiv{
+            height:100vh;
+            width:100%;
+            display:flex;
+            align-items: center;
+            justify-content: center;
+        }
+        paper-card{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        @media (max-width: 479px) {
+            paper-card{
+                width:90%;
+                padding:16px;
+            }
+        }
+        @media (min-width: 480px) and (max-width: 839px) {
+            paper-card{
+                width:30%;
+                padding:16px;
+            }
+        }
+        @media (min-width: 840px)  {
+            paper-card{
+                width:60%;
+                padding:16px;
+            }
+        }
+
+    </style>
+    <iron-ajax id="generateLoginRequest" method='POST' handle-as="json" content-type="application/json" on-response="handleResponse" on-error="handleError"></iron-ajax>
+    <div class="mainDiv">
+        <paper-card>
+            <paper-input label="Username" value="{{username}}" auto-validate required></paper-input>
+            <paper-input label="Password" type="password" value="{{password}}" auto-validate required></paper-input>                               
+            <paper-button class="sign-up" on-tap="handleSignIn">
+                Sign In
+            </paper-button>
+        </paper-card>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'my-app-login',
+
+      properties: {
+          loggedin:{
+              type:Boolean,
+              value:false,
+              notify:true
+          }
+      },
+
+      handleSignIn : function(){
+          var body = {
+              username : this.username,
+              password : this.password
+          };
+          console.log(body);
+          this.$$("#generateLoginRequest").body = JSON.stringify(body);
+		  this.$$("#generateLoginRequest").url = "/api/Users/login";
+          this.$$("#generateLoginRequest").generateRequest();
+      },
+
+      handleResponse : function(){
+          this.loggedin = true;
+      },
+
+      handleError : function(){
+          alert("Login Failed!!!!! Please try again")
+      }
+      
+    });
+  </script>
+</dom-module>

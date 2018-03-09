@@ -18,7 +18,8 @@
     "google-map": "^1.2.0",
     "iron-ajax": "^1.4.4",
     "paper-dialog": "^1.1.0",
-    "iron-icon": "^1.0.13"
+    "iron-icon": "^1.0.13",
+    "paper-elements": "^1.0.7"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"
