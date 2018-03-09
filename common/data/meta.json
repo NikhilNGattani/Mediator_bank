@@ -1,6 +1,10 @@
 [
 	{
-		"model":"User",
+		"model":"MUser",
 		"filename" : "user.json"
+	},
+	{
+		"model":"Agent",
+		"filename" : "agents.json"
 	}
 ]

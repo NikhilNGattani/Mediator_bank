@@ -1,0 +1,25 @@
+{
+  "name": "Agent",
+  "plural": "Agents",
+  "base": "PersistedModel",
+  "idInjection": false,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "agentIdentifier": {
+      "type": "string",
+      "id": true,
+      "required": true
+    },
+    "agentAPI": {
+      "type": "string"
+    },
+	"agentName":{
+		"type":"string"
+	}
+  },
+  "validations": [],
+  "acls": [],
+  "methods": {}
+}

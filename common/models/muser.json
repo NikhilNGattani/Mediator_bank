@@ -1,0 +1,19 @@
+{
+  "name": "MUser",
+  "plural": "MUsers",
+  "base": "User",
+  "idInjection": false,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "username": {
+      "type": "string",
+      "id": true,
+      "required": true
+    }
+  },
+  "validations": [],
+  "acls": [],
+  "methods": {}
+}

@@ -16,24 +16,70 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <dom-module id="my-view1">
 	<template>
 		<style include="shared-styles">
-		.map-height{
-			height:80vh;
-		}
-    </style>
+		</style>
 
+	 	<iron-ajax id="generateAgentRequest" method='GET' handle-as="json" content-type="application/json" on-response="handleResponse" on-error="handleError"></iron-ajax>
+		 
+		 <h3>
+		 You have given permision to following agents :-
+		 </h3>
+		 <template is ="dom-repeat" items="{{agentsList}}">
+			 <div>
+				<span>{{_getIndex(index)}}.</span>
+				&nbsp;
+				<span>{{item.agentName}}</span>
+			 </div>
+		 </template>
+		 <paper-button on-tap="generateReport">
+                Generate transactions summary 
+         </paper-button>
+	</template>
 
-</template>
-
-<script>
+	<script>
 		Polymer({
 			is: 'my-view1',
 			properties: {
-
+				loggedin:{
+					type:Boolean,
+          			reflectToAttribute: true,
+					observer:'_loginChanged'
+				},
+				agentsList:{
+					type:Array,
+					notify:true
+				}
 			},
-			attached: function () {
-
+			_loginChanged: function () {
+				if(this.loggedin){
+					this.$$("#generateAgentRequest").url = "/api/Agents";
+          			this.$$("#generateAgentRequest").generateRequest();
+				}
 			},
-
+			handleResponse: function(e){
+				this.agentsList = e.detail.response;
+				var self = this;
+				for(var i=0;i<this.agentsList.length;i++){
+					var ajax = document.getElementById("iron-ajax");
+					ajax.method = "GET";
+					ajax.contentType = "application/json";
+      				ajax.handleAs = "json";
+					ajax.url = this.agentsList[i].agentAPI;
+					ajax.headers["username"] = sessionStorage.userId;
+					ajax.addEventListener("error", function(e){
+						self.agentsList[i].response = "error";
+					});
+					ajax.addEventListener("response", function(e){
+						self.agentsList[i].response = e.detail.response;
+					});
+					ajax.generateRequest();
+				}
+			},
+			handleError : function(e){
+				alert("Not able to fetch your registered agents");
+			},
+			_getIndex : function(index){
+				return index+1;
+			}
 		});
 	</script>
 </dom-module>

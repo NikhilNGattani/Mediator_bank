@@ -1,0 +1,22 @@
+[
+  {
+    "agentIdentifier": "HDFCBANK",
+    "agentAPI": "",
+	"agentName":"HDFC Bank"
+  },
+  {
+    "agentIdentifier": "ICICIBANK",
+    "agentAPI": "",
+	"agentName":"ICICI Bank"
+  },
+  {
+    "agentIdentifier": "SBIBANK",
+    "agentAPI": "",
+	"agentName":"SBI Bank"
+  },
+  {
+    "agentIdentifier": "YESBANK",
+    "agentAPI": "",
+	"agentName":"YES Bank"
+  }
+]

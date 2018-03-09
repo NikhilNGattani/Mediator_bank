@@ -11,7 +11,7 @@
         paper-button {
             /*Primary button class*/
             margin-top:16px;
-            background-color: #212121;
+            background-color: var(--primary-color);
             --paper-button: {
                 color: #fff;
                 min-width: 140px;
@@ -82,13 +82,14 @@
               username : this.username,
               password : this.password
           };
-          console.log(body);
           this.$$("#generateLoginRequest").body = JSON.stringify(body);
-		  this.$$("#generateLoginRequest").url = "/api/Users/login";
+		  this.$$("#generateLoginRequest").url = "/api/MUsers/login";
           this.$$("#generateLoginRequest").generateRequest();
       },
 
-      handleResponse : function(){
+      handleResponse : function(e){
+          var response = event.detail.response;
+          sessionStorage.userId = response.userId;
           this.loggedin = true;
       },
 
