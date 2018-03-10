@@ -13,7 +13,21 @@
       "required": true
     }
   },
+  "relations": {
+    "agentRegistered": {
+      "type": "hasMany",
+      "model": "agentRegistered",
+      "foreignKey": "username"
+    }
+  },
   "validations": [],
-  "acls": [],
+  "acls": [
+   {
+      "accessType": "EXECUTE",
+      "principalType": "ROLE",
+      "principalId": "$owner",
+      "permission": "ALLOW",
+      "property": "__get__agentRegistered"
+    }],
   "methods": {}
 }

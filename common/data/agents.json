@@ -1,22 +1,22 @@
 [
   {
     "agentIdentifier": "HDFCBANK",
-    "agentAPI": "",
+    "agentAPI": "https://localhost:3003",
 	"agentName":"HDFC Bank"
   },
   {
     "agentIdentifier": "ICICIBANK",
-    "agentAPI": "",
+    "agentAPI": "https://localhost:3004",
 	"agentName":"ICICI Bank"
   },
   {
     "agentIdentifier": "SBIBANK",
-    "agentAPI": "",
+    "agentAPI": "https://localhost:3005",
 	"agentName":"SBI Bank"
   },
   {
     "agentIdentifier": "YESBANK",
-    "agentAPI": "",
+    "agentAPI": "https://localhost:3006",
 	"agentName":"YES Bank"
   }
 ]

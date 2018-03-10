@@ -16,70 +16,128 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <dom-module id="my-view1">
 	<template>
 		<style include="shared-styles">
+			paper-card{
+				width:100%;
+			}
+			.paper-round{
+				border-radius: 16px;
+			}
+			.color-card{
+				background-color: var(--primary-color);
+				color:white;
+			}
 		</style>
 
-	 	<iron-ajax id="generateAgentRequest" method='GET' handle-as="json" content-type="application/json" on-response="handleResponse" on-error="handleError"></iron-ajax>
-		 
-		 <h3>
-		 You have given permision to following agents :-
-		 </h3>
-		 <template is ="dom-repeat" items="{{agentsList}}">
-			 <div>
-				<span>{{_getIndex(index)}}.</span>
-				&nbsp;
-				<span>{{item.agentName}}</span>
-			 </div>
-		 </template>
-		 <paper-button on-tap="generateReport">
-                Generate transactions summary 
-         </paper-button>
-	</template>
+<paper-card class="color-card" elevation="0" style="display:flex;flex-direction:column;align-items: center">
+<div style="font-size:32px">Balance</div>
+<div style="font-size:64px">{{totalBalance}}</div>
+</paper-card>
+<div style="padding:16px;font-size:16px">
+<template is="dom-repeat" items="{{finalList}}">
+	
+		<paper-card class="paper-round" style="margin-top:16px; padding:16px;display: flex;align-items: center">
+<div style="flex:1">
+<img src="../img/{{item.BANKID}}.jpg" style="flex:1;width:64px;height:64px"/>
+</div>
+<div style="flex:2">
+<div><strong>{{item.transactionRemarks}}</strong></div>
+<div style="font-size: 12px;">{{_getFormattedDate(item.transactionDate)}}</div>
+</div>
+<div style="flex:2;display: flex;justify-content: center">
+	<strong>
+	<div hidden$="{{!_checkTransactionType(item.transactionType)}}" style="color:red">{{_getMesssage(item.trasactionType,item.accountId)}}</div>
+	<div hidden$="{{_checkTransactionType(item.transactionType)}}" style="color:green">{{_getMesssage(item.trasactionType,item.accountId)}}</div>
+	</strong>
+</div>
+<div style="flex:2;display:flex;flex-direction:column;align-items:flex-end" >
+<div><strong>{{item.transactionCurrency}}&nbsp;{{item.transactionAmount}}</strong></div>
+<div style="font-size: 12px;">{{item.transactionCategory}}</div>
+</div>
+</paper-card>
 
-	<script>
-		Polymer({
-			is: 'my-view1',
-			properties: {
-				loggedin:{
-					type:Boolean,
-          			reflectToAttribute: true,
-					observer:'_loginChanged'
-				},
-				agentsList:{
-					type:Array,
-					notify:true
-				}
+</template>
+
+</div>
+
+</template>
+
+<script>
+	Polymer({
+		is: 'my-view1',
+		properties: {
+			loggedin: {
+				type: Boolean,
+				reflectToAttribute: true,
+				observer: '_loginChanged'
 			},
-			_loginChanged: function () {
-				if(this.loggedin){
-					this.$$("#generateAgentRequest").url = "/api/Agents";
-          			this.$$("#generateAgentRequest").generateRequest();
-				}
+			finalList: {
+				type: Array,
+				reflectToAttribute: true
 			},
-			handleResponse: function(e){
-				this.agentsList = e.detail.response;
-				var self = this;
-				for(var i=0;i<this.agentsList.length;i++){
-					var ajax = document.getElementById("iron-ajax");
-					ajax.method = "GET";
-					ajax.contentType = "application/json";
-      				ajax.handleAs = "json";
-					ajax.url = this.agentsList[i].agentAPI;
-					ajax.headers["username"] = sessionStorage.userId;
-					ajax.addEventListener("error", function(e){
-						self.agentsList[i].response = "error";
-					});
-					ajax.addEventListener("response", function(e){
-						self.agentsList[i].response = e.detail.response;
-					});
-					ajax.generateRequest();
-				}
-			},
-			handleError : function(e){
-				alert("Not able to fetch your registered agents");
-			},
-			_getIndex : function(index){
-				return index+1;
+			totalBalance: {
+				type:String,
+				reflectToAttribute: true,
+				value : "0"
 			}
-		});
-	</script>
+		},
+		attached: function () {
+
+		},
+		_loginChanged: function () {
+			var self = this;
+			if (this.loggedin) {
+				var userId = sessionStorage.userId;
+				var ajax = document.createElement("iron-ajax");
+				ajax.method = "POST";
+				ajax.contentType = "application/json";
+				ajax.handleAs = "json";
+				ajax.url = "http://localhost:1880/Transactions/discover";
+				ajax.body = {
+					name: sessionStorage.userId,
+					dob: sessionStorage.dob
+				};
+				ajax.addEventListener('response', function (e) {
+					var response = e.detail.response;
+					var tempList = [];
+					var amount = 0;
+					for(var i=0;i<response.length;i++){
+						for(var j=0;j<response[i].length;j++){
+							tempList = tempList.concat(response[i][j]);
+							if(response[i][j].trasactionType == "Credit")
+								amount = amount + Number(response[i][j].transactionAmount);
+							else
+								amount = amount - Number(response[i][j].transactionAmount);
+						}
+					}
+					tempList.sort(function(a,b){
+						return new Date(a.transactionDate).getTime() - new Date(b.transactionDate).getTime();
+					});
+					self.finalList = tempList;
+					if(amount != 0)
+						self.totalBalance = response[0][0].transactionCurrency + " " + amount;
+				});
+				ajax.generateRequest();
+			}
+		},
+		_getMesssage : function(a,b){
+			if(a == 'Credit')
+				return "Credited to "+b;
+			else
+				return "Debited from "+b;
+		},
+		_checkTransactionType: function(a){
+			if(a == 'Credit')
+				return true;
+			return false;
+		},
+		_getFormattedDate : function(dt){
+			 let locale = "en-IN";
+      let options = {
+        weekday: "short", year: "numeric", month: "short",
+        day: "numeric"
+      };
+      return new Intl.DateTimeFormat(locale, options).format(new Date(dt));
+		}
+	});
+</script>
 </dom-module>

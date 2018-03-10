@@ -25,6 +25,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="my-view1.html">
 <link rel="import" href="shared-styles.html">
 
+
 <dom-module id="my-app">
   <template>
     <style include="shared-styles">
@@ -32,13 +33,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: #fff;
         background-color: var(--primary-color);
       }
-      .mainDiv{
-            height:100vh;
-            width:100%;
-            display:flex;
-            align-items: center;
-            justify-content: center;
-        }
     </style>
 
 <template is="dom-if" if={{!loggedin}}>
@@ -49,12 +43,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
   <app-toolbar>
     <div main-title>
-      <img src="../img/download.png" style="width: 250px;margin-top: 10px;"/>
+     
     </div>
   </app-toolbar>
-  <div class="mainDiv">
   <my-view1 name="view1" loggedin="{{loggedin}}"></my-view1>
-  </div>
 </template>
 </template>
 

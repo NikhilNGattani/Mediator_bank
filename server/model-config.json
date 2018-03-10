@@ -40,5 +40,9 @@
   "MUser": {
     "dataSource": "mongods",
     "public": true
+  },
+  "agentRegistered": {
+    "dataSource": "mongods",
+    "public": true
   }
 }

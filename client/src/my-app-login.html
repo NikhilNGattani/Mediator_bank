@@ -32,6 +32,11 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            border-radius: 16px;
+        }
+        .imageDiv{
+            display:flex;
+            justify-content: center;
         }
         @media (max-width: 479px) {
             paper-card{
@@ -56,6 +61,11 @@
     <iron-ajax id="generateLoginRequest" method='POST' handle-as="json" content-type="application/json" on-response="handleResponse" on-error="handleError"></iron-ajax>
     <div class="mainDiv">
         <paper-card>
+            <div class="imageDiv">
+                <div main-title style="font-size:64px;font-family:Book Antiqua;">
+      Mediator Bank
+    </div>
+            </div>
             <paper-input label="Username" value="{{username}}" auto-validate required></paper-input>
             <paper-input label="Password" type="password" value="{{password}}" auto-validate required></paper-input>                               
             <paper-button class="sign-up" on-tap="handleSignIn">
@@ -90,7 +100,18 @@
       handleResponse : function(e){
           var response = event.detail.response;
           sessionStorage.userId = response.userId;
+          sessionStorage.authToken = response.id;
           this.loggedin = true;
+          var ajax = document.createElement("iron-ajax");
+            ajax.method = "GET";
+            ajax.contentType = "application/json";
+            ajax.handleAs = "json";
+            ajax.url = "/api/MUsers/"+ sessionStorage.userId;
+            ajax.headers["Authorization"] = response.id;
+            ajax.addEventListener("response", function(e){
+                sessionStorage.dob = e.detail.response.dob;
+            });
+            ajax.generateRequest();
       },
 
       handleError : function(){
